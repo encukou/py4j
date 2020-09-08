@@ -1,6 +1,11 @@
 language: java
 matrix:
   include:
+    - name: "JDK 8, Python 3.8"
+      jdk: "openjdk8"
+      env: TEST_SUITE=java8-3.8
+      language: python
+      python: "3.8"
     - name: "JDK 8, Python 3.7"
       jdk: "openjdk8"
       env: TEST_SUITE=java8-3.7
@@ -38,6 +43,7 @@ cache:
     - $HOME/.cache/pip
 install:
   - eval "$(pyenv init -)"
+  - if [ $TEST_SUITE == "java8-3.8" ] ; then python -m pip install nose; fi
   # Xenial is alpha right now so we install python 3.7 from deadsnakes ppa, create a venv and run our python commands from that venv.
   - if [ $TEST_SUITE == "java8-3.7" ] ; then sudo add-apt-repository ppa:deadsnakes/ppa -y; sudo apt-get update; sudo apt-get install python3.7 python3.7-venv -y; python3.7 -m venv virtualenv; . virtualenv/bin/activate; pip install nose; fi
   - if [ $TEST_SUITE == "java8" ] ; then pyenv global 3.6.3; pip install --user flake8==2.5.0; pip install --user nose; fi
